@@ -7,90 +7,126 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
+    private static int level;
+    private static int chances;
     public static ArrayList<String> words = new ArrayList<String>();
     public static String [][] board = new String[4][4];
     public static String [][] cards = new String[4][4];
     public static Scanner scanner = new Scanner(System.in);
-    private static int level;
 
-    public static int getLevel() {
-        return level;
-    }
+////    SOME BASIC TESTING FUNCTIONS - FOR REMOVAL AT FINAL COMMIT
+//    public static void printCards() {
+//        for (int i = 0; i < level*2; i++) {
+//            System.out.print("|");
+//            for (int j = 0; j < 4; j++) {
+//                System.out.print(cards[i][j]);
+//                System.out.print("|");
+//            }
+//            System.out.println();
+//        }
+//    }
+//
+//    public static void simplePrinter(List<String> list) {
+//        for (int i = 0; i < list.size(); i++) {
+//            System.out.println(list.get(i));
+//        }
+//    }
 
-    public static void setLevel(int lvl) {
-        level = lvl;
-    }
 
-    public static void printBoard() {
-        for (int i = 0; i < 4; i++) {
-            System.out.print("|");
-            for (int j = 0; j < 4; j++) {
-                System.out.print(board[i][j]);
-                System.out.print("|");
+
+
+//    MAIN METHOD
+    public static void main(String[] args) {
+
+        boolean quit = false;
+        int choice;
+        System.out.println("Words Memory Game.\n");
+        printMenu();
+
+        while (!quit) {
+            choice = intCheck(4);
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\nSelect difficulty (1 for easy, 2 for hard): ");
+                    level = intCheck(2);
+                    scanner.nextLine();
+                    if (level == 1) chances = 10;
+                    if (level == 2) chances = 15;
+
+                    wordsPoolBuilder();
+                    shuffleCards();
+                    setBoard();
+                    printBoard();
+                    cardComparison(cards);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    printMenu();
+                    break;
+                case 4:
+                    quit = true;
+                    break;
+                default:
+                    System.out.println("Invalid input, please try again.");
+                    break;
+
             }
-            System.out.println();
         }
     }
 
-    public static void printCards() {
-        for (int i = 0; i < 4; i++) {
-            System.out.print("|");
-            for (int j = 0; j < 4; j++) {
-                System.out.print(cards[i][j]);
-                System.out.print("|");
-            }
-            System.out.println();
-        }
-    }
-//    SHUFFLE CARDS BASED ON CHOSEN GAME DIFFICULTY. RESETTING ARRAYLISTS.
-    public static void shuffleCards() { //row? col?
-        Random rand = new Random();
-        int index;
-        words.addAll(words);
-        if (level == 1) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 4; j++) {
-                    index = rand.nextInt(words.size());
-                    cards[i][j] = words.get(index);
-                    words.remove(index);
+//    INTEGER INPUT VALIDITY CHECKER
+    public static int intCheck(int maxVal) {
+        boolean incorrectInput = true;
+        int userChoice;
+        while (incorrectInput) {
+            if (scanner.hasNextInt()) {
+                userChoice = scanner.nextInt();
+                if (userChoice > 0 && userChoice <= maxVal) {
+                    return userChoice;
+                } else {
+                    System.out.println("Error: Invalid input, please try again.");
                 }
-            }
-        } else if (level == 2) {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    index = rand.nextInt(words.size());
-                    cards[i][j] = words.get(index);
-                    words.remove(index);
-                }
+            } else {
+                scanner.next();
+                System.out.println("Error: Invalid input, please try again.");
             }
         }
+        return -1;
     }
-//    BUILD A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY FILEREADER METHOD
-//    RETURNS ARRAYLIST OF TYPE STRING (SINGLE ITERATION OF RANDOMIZED WORD)
+
+//    MENU OPTIONS
+    public static void printMenu() {
+        System.out.println("Main Menu\n\n" +
+                "Press: \n" +
+                "1: to start a new game,\n" +
+                "2: to show high scores table,\n" +
+                "3: to print menu,\n" +
+                "4: to quit.\n\n" +
+                "Enter your choice: ");
+    }
+
+//    BUILDS A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY READFILE METHOD
+//    RETURNS ARRAYLIST OF TYPE STRING (SINGLE ITERATION OF RANDOMIZED WORDS)
     public static ArrayList<String> wordsPoolBuilder() {
         Random rand = new Random();
-        ArrayList<String> tempList = fileReader();
+        ArrayList<String> tempList = readFile("Words.txt");
         int index;
-        if (level == 1) { // EASY: NEED 4 WORDS
-            for (int i = 0; i < 4; i++) {
-                index = rand.nextInt(tempList.size());
-                words.add(tempList.get(index));
-                tempList.remove(index);
-            }
-        } else if (level == 2) { // HARD: NEED 8 WORDS
-            for (int i = 0; i < 8; i++) {
-                index = rand.nextInt(tempList.size());
-                words.add(tempList.get(index));
-                tempList.remove(index);
-            }
+        for (int i = 0; i < level*4; i++) {
+            index = rand.nextInt(tempList.size());
+            words.add(tempList.get(index));
+            tempList.remove(index);
         }
         return words;
     }
-//    READ TEXT FILE LINE BY LINE AND RETURN CONTENT IN AN ARRAYLIST OF TYPE STRING (WORDS)
-    public static ArrayList<String> fileReader() {
+
+//    READS TEXT FILE LINE BY LINE AND RETURNS CONTENT IN AN ARRAYLIST OF TYPE STRING (WORDS)
+    public static ArrayList<String> readFile(String fileName) {
         ArrayList<String> tempList = new ArrayList<String>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("Words.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
             while((line = reader.readLine()) != null) {
                 tempList.add(line);
@@ -102,22 +138,56 @@ public class Game {
         return tempList;
     }
 
-    public static void simplePrinter(List<String> list) {
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i));
+//    SHUFFLES CARDS BASED ON CHOSEN GAME DIFFICULTY. RESETS ARRAYLIST OF WORDS.
+    public static void shuffleCards() {
+        Random rand = new Random();
+        int index;
+        words.addAll(words);
+        for (int i = 0; i < level*2; i++) {
+            for (int j = 0; j < 4; j++) {
+                index = rand.nextInt(words.size());
+                cards[i][j] = words.get(index);
+                words.remove(index);
+            }
         }
     }
 
-    public static void checkInput(String [][] cards) {
-        while (true) {
-            if (!gameOver()) {
-                System.out.println("Row: (1-4)");
-                int row1 = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println("Collumn: (1-4)");
-                int col1 = scanner.nextInt();
-                scanner.nextLine();
+//    PREPARES THE BASE LOOK OF THE BOARD
+    public static void setBoard() {
+        System.out.println();
+        for (int i = 0; i < level*2; i++) {
+            for (int j = 0; j < 4; j++) {
+                board[i][j] = " _ ";
+            }
+        }
+    }
 
+//    PRINTS CURRENT BOARD STATE
+    public static void printBoard() {
+        for (int i = 0; i < level*2; i++) {
+            System.out.print("|");
+            for (int j = 0; j < 4; j++) {
+                System.out.print(board[i][j]);
+                System.out.print("|");
+            }
+            System.out.println();
+        }
+    }
+
+//    COMPARES CHOSEN CARDS AND PRINTS RESULTS, NEEDS REFACTORING..
+    public static void cardComparison(String [][] cards) {
+
+        while (true) {
+            int row1, row2, col1, col2;
+            if (!gameOver()) {
+                System.out.println("\nEnter coordinates of the first word.");
+                System.out.println("\nRow: ");
+                row1 = intCheck(level*2);
+                scanner.nextLine();
+                System.out.println("Column: ");
+                col1 = intCheck(4);
+                scanner.nextLine();
+                System.out.println();
                 if (!board[row1-1][col1-1].equals(" _ ")) {
                     System.out.println("Already entered.\n");
                     printBoard();
@@ -126,40 +196,49 @@ public class Game {
                     board[row1-1][col1-1] = " " + cards[row1-1][col1-1] + " ";
                     printBoard();
                 }
-                System.out.println("Row: (1-4)");
-                int row2 = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println("Collumn: (1-4)");
-                int col2 = scanner.nextInt();
-                scanner.nextLine();
 
+                System.out.println("\nEnter coordinates of the second word.");
+                System.out.println("\nRow: ");
+                row2 = intCheck(level*2);
+                scanner.nextLine();
+                System.out.println("Column: ");
+                col2 = intCheck(4);
+                scanner.nextLine();
+                System.out.println();
                 if (!board[row2-1][col2-1].equals(" _ ")) {
-                    System.out.println("Already entered.\n");
+                    System.out.println("Already entered.");
                     board[row1 - 1][col1 - 1] = " _ ";
+                    chances-=2;
+                    System.out.println(chances + " chances left.\n");
                     printBoard();
                     continue;
                 } else {
-                    board[row2-1][col2-1] = " " + cards[row2-1][col2-1] + " ";
-                    if (board[row1-1][col1-1].equals(board[row2-1][col2-1])) {
-                        printBoard();
-                        System.out.println("Correct");
-                    } else {
-                        printBoard();
-                        System.out.println("False");
-                        board[row1-1][col1-1] = " _ ";
-                        board[row2-1][col2-1] = " _ ";
-                        printBoard();
-                    }
+                    board[row2 - 1][col2 - 1] = " " + cards[row2 - 1][col2 - 1] + " ";
+                    printBoard();
+                }
+                if (board[row1-1][col1-1].equals(board[row2-1][col2-1])) {
+                    System.out.println("\nCorrect");
+                    System.out.println(chances + " chances left.");
+                } else {
+                    System.out.println("\nFalse");
+                    chances--;
+                    board[row1-1][col1-1] = " _ ";
+                    board[row2-1][col2-1] = " _ ";
+                    System.out.println(chances + " chances left.");
                 }
             } else {
-                System.out.println("Game over");
+                if (chances > 0) System.out.println("\nCongratulations, you have won!");
+                else System.out.println("\nYou have lost, better luck next time!");
+                System.out.println("\nPress 1 to play again or 4 to quit.");
                 break;
             }
         }
     }
 
+//    GAMEOVER CONDITIONS CHECKER
     public static boolean gameOver() {
-        for (int i = 0; i < 4; i++) {
+        if (chances == 0) return true;
+        for (int i = 0; i < level*2; i++) {
             for (int j = 0; j < 4; j++) {
                 if (board[i][j].equals(" _ ")) return false;
             }
@@ -167,39 +246,4 @@ public class Game {
         return true;
     }
 
-    public static void main(String[] args) {
-
-//        simplePrinter(fileReader());
-        while (true) {
-            setLevel(2);
-            simplePrinter(wordsPoolBuilder());
-            shuffleCards();
-            printBoard();
-            printCards();
-            break;
-        }
-
-
-//        while (true) {
-//            System.out.println("Press n for a new game or q to quit.");
-//            String choice = scanner.nextLine();
-//            if (choice.equals("q")) {
-//                System.out.println("Exitting the game.");
-//                break;
-//            } else if (choice.equals("n")) {
-//                shuffleCards();
-//                for (int i = 0; i < 4; i++) {
-//                    for (int j = 0; j < 4; j++) {
-//                        board[i][j] = " _ ";
-//                    }
-//                }
-//                printBoard();
-//                checkInput(cards);
-//                break;
-//            } else {
-//                System.out.println("Invalid input.");
-//                continue;
-//            }
-//        }
-    }
 }
