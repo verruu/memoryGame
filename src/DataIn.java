@@ -6,35 +6,19 @@ import java.util.Random;
 
 public class DataIn {
 
-    private int level;
-    private ArrayList<String> words;
+    private final int level;
+    private final ArrayList<String> words;
 
     public DataIn(int level) {
         this.level = level;
         this.words = new ArrayList<>();
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public ArrayList<String> getWords() {
-        return words;
-    }
-
-    public void setWords(ArrayList<String> words) {
-        this.words = words;
-    }
-
-    //    BUILDS A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY READFILE METHOD
+//    BUILDS A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY READFILE METHOD
 //    RETURNS ARRAYLIST OF TYPE STRING (SINGLE ITERATION OF RANDOMIZED WORDS)
-    public  ArrayList<String> wordsPoolBuilder() {
+    public ArrayList<String> wordsPoolBuilder(String fileName) {
         Random rand = new Random();
-        ArrayList<String> tempList = readFile("Words.txt");
+        ArrayList<String> tempList = readFile(fileName);
         int index;
         for (int i = 0; i < level*4; i++) {
             index = rand.nextInt(tempList.size());
@@ -45,8 +29,8 @@ public class DataIn {
     }
 
 //    READS TEXT FILE LINE BY LINE AND RETURNS CONTENT IN AN ARRAYLIST OF TYPE STRING (WORDS)
-    public  ArrayList<String> readFile(String fileName) {
-        ArrayList<String> tempList = new ArrayList<String>();
+    public ArrayList<String> readFile(String fileName) {
+        ArrayList<String> tempList = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
