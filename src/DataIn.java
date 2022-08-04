@@ -5,18 +5,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class DataIn {
-
-    private final int level;
     private final ArrayList<String> words;
 
-    public DataIn(int level) {
-        this.level = level;
+    public DataIn() {
         this.words = new ArrayList<>();
     }
 
 //    BUILDS A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY READFILE METHOD
 //    RETURNS ARRAYLIST OF TYPE STRING (SINGLE ITERATION OF RANDOMIZED WORDS)
-    public ArrayList<String> wordsPoolBuilder(String fileName) {
+    public ArrayList<String> wordsPoolBuilder(String fileName, int level) {
         Random rand = new Random();
         ArrayList<String> tempList = readFile(fileName);
         int index;

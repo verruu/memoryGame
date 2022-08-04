@@ -6,19 +6,20 @@ public class Game {
     private String [][] cards = new String[4][4];
 
 //    MAIN METHOD
-    public Game(int difficultySelector) {
+    public Game(int difficultySelector, String playerName) {
 
         int level = difficultySelector;
 
         if (level == 1) chances = 10;
         if (level == 2) chances = 15;
 
-        DataIn data = new DataIn(level);
+        DataIn dataIn = new DataIn();
         Logic coMet = new Logic();
+        DataOut dataOut = new DataOut();
 
-        shuffleCards(data.wordsPoolBuilder("Words.txt"), level);
+        shuffleCards(dataIn.wordsPoolBuilder("Words.txt", level), level);
         coMet.setBoard(level);
-        coMet.cardComparison(cards, level, chances);
+        dataOut.saveFile(playerName, coMet.cardComparison(cards, level, chances));
     }
 
 //    SHUFFLES CARDS BASED ON CHOSEN GAME DIFFICULTY. RESETS ARRAYLIST OF WORDS.

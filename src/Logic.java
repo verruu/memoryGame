@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Logic {
 
     private String [][] board = new String[4][4];
@@ -5,7 +7,7 @@ public class Logic {
     Stopwatch stopwatch = new Stopwatch();
 
 //    COMPARES CHOSEN CARDS AND PRINTS RESULTS, NEEDS REFACTORING..
-    public void cardComparison(String [][] cards, int level, int chances) {
+    public ArrayList<String> cardComparison(String [][] cards, int level, int chances) {
         stopwatch.start();
         printBoard(level);
         while (true) {
@@ -60,6 +62,11 @@ public class Logic {
                 break;
             }
         }
+        ArrayList<String> list = new ArrayList<>();
+        list.add(String.valueOf(chances));
+        list.add(String.valueOf(stopwatch.getMinutes()));
+        list.add(String.valueOf(stopwatch.seconds()));
+        return list;
     }
 
 //    ROW INPUT
