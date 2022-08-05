@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Logic {
-
     private String [][] board = new String[4][4];
+
     Tools tools = new Tools();
     Stopwatch stopwatch = new Stopwatch();
 
@@ -56,9 +56,8 @@ public class Logic {
                 stopwatch.stop();
                 if (chances > 0) System.out.println("\nCongratulations, you have won!");
                 else System.out.println("\nYou have lost, better luck next time!");
-                System.out.println("your attempt took you " + stopwatch.getMinutes() +
-                        " minute(s) and " + stopwatch.seconds() + " second(s).");
-                System.out.println("\nPress 1 to play again or 4 to quit.");
+                System.out.println("Your attempt took you " + stopwatch.getMinutes() +
+                        " minute(s) and " + stopwatch.seconds() + " second(s). " + chances + " chances remained.");
                 break;
             }
         }
@@ -72,15 +71,13 @@ public class Logic {
 //    ROW INPUT
     private int row(int level) {
         System.out.println("\nRow: ");
-        int row = tools.checkUserInput(level*2);
-        return row;
+        return tools.checkUserInput(level*2);
     }
 
 //    COLUMN INPUT
     private int col() {
         System.out.println("Column: ");
-        int col = tools.checkUserInput(4);
-        return col;
+        return tools.checkUserInput(4);
     }
 
 //    PREPARES THE BASE LOOK OF THE BOARD

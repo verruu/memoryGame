@@ -8,6 +8,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .DS_Store
+**/highscores.txt
 
 # AWS User-specific
 .idea/**/aws.xml

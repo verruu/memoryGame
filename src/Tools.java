@@ -1,13 +1,11 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Tools {
-
     private static final Scanner scanner = new Scanner(System.in);
 
-    public Tools() {
-    }
-
-//    SHUFFLES CARDS BASED ON CHOSEN GAME DIFFICULTY. RESETS ARRAYLIST OF WORDS.
+//    USER INPUT CHECKER, USED FOR INTEGER INPUT VALIDATION.
     public int checkUserInput(int maxVal) {
         boolean incorrectInput = true;
         int userChoice;
@@ -27,14 +25,18 @@ public class Tools {
         return -1;
     }
 
-//    MENU OPTIONS
-    public void printMenu() {
-        System.out.println("MainMenu Menu\n\n" +
-                "Press: \n" +
-                "1: to start a new game,\n" +
-                "2: to show high scores table,\n" +
-                "3: to print menu,\n" +
-                "4: to quit.\n\n" +
-                "Enter your choice: ");
+//    CREATE A FILE (IN THIS CASE THE BASE HIGSCORES.TXT FILE TO PREVENT READ/WRITE ERRORS)
+    public void createFile(String pathName) {
+        try {
+            File New_File = new File(pathName);
+            if (New_File.createNewFile()){
+//                System.out.println("The file is created successfully!");
+            } else {
+//                System.out.println("The file already exists.");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

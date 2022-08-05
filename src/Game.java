@@ -4,22 +4,27 @@ import java.util.Random;
 public class Game {
     private int chances;
     private String [][] cards = new String[4][4];
+    private ArrayList<String> tempHighScores;
 
 //    MAIN METHOD
     public Game(int difficultySelector, String playerName) {
 
-        int level = difficultySelector;
-
-        if (level == 1) chances = 10;
-        if (level == 2) chances = 15;
+        if (difficultySelector == 1) chances = 10;
+        if (difficultySelector == 2) chances = 15;
 
         DataIn dataIn = new DataIn();
-        Logic coMet = new Logic();
+        Logic logic = new Logic();
         DataOut dataOut = new DataOut();
 
-        shuffleCards(dataIn.wordsPoolBuilder("Words.txt", level), level);
-        coMet.setBoard(level);
-        dataOut.saveFile(playerName, coMet.cardComparison(cards, level, chances));
+        tempHighScores = dataIn.readFile("highscores.txt");
+
+        shuffleCards(dataIn.wordsPoolBuilder("Words.txt", difficultySelector), difficultySelector);
+        logic.setBoard(difficultySelector);
+        dataOut.saveFile(playerName, logic.cardComparison(cards, difficultySelector, chances), tempHighScores);
+
+        System.out.println("\nHigh scores list:\n");
+        dataIn.filePrinter("highscores.txt");
+        System.out.println("\nPress 1 to play again or 4 to quit.");
     }
 
 //    SHUFFLES CARDS BASED ON CHOSEN GAME DIFFICULTY. RESETS ARRAYLIST OF WORDS.

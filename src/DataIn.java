@@ -11,6 +11,12 @@ public class DataIn {
         this.words = new ArrayList<>();
     }
 
+//    DATA PRINTER
+    public void filePrinter(String fileName) {
+        ArrayList<String> tempList = readFile(fileName);
+        for (int i = 0; i < tempList.size(); i++) System.out.println(tempList.get(i));
+    }
+
 //    BUILDS A BASE OF WORDS BASED ON CHOSEN GAME DIFFICULTY. USES ARRAYLIST CREATED BY READFILE METHOD
 //    RETURNS ARRAYLIST OF TYPE STRING (SINGLE ITERATION OF RANDOMIZED WORDS)
     public ArrayList<String> wordsPoolBuilder(String fileName, int level) {
