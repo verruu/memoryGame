@@ -9,7 +9,8 @@ public class Logic {
 //    COMPARES CHOSEN CARDS AND PRINTS RESULTS, NEEDS REFACTORING..
     public ArrayList<String> cardComparison(String [][] cards, int level, int chances) {
         stopwatch.start();
-        printBoard(level);
+        printBoard(level, chances);
+        boolean saveScore;
         while (true) {
             int row1, row2, col1, col2;
             if (!gameOver(level, chances)) {
@@ -19,11 +20,11 @@ public class Logic {
                 System.out.println();
                 if (!board[row1-1][col1-1].equals(" _ ")) {
                     System.out.println("Already entered.\n");
-                    printBoard(level);
+                    printBoard(level, chances);
                     continue;
                 } else {
                     board[row1-1][col1-1] = " " + cards[row1-1][col1-1] + " ";
-                    printBoard(level);
+                    printBoard(level, chances);
                 }
 
                 System.out.println("\nEnter coordinates of the second word.");
@@ -35,11 +36,11 @@ public class Logic {
                     board[row1 - 1][col1 - 1] = " _ ";
                     chances-=2;
                     System.out.println(chances + " chances left.\n");
-                    printBoard(level);
+                    printBoard(level, chances);
                     continue;
                 } else {
                     board[row2 - 1][col2 - 1] = " " + cards[row2 - 1][col2 - 1] + " ";
-                    printBoard(level);
+                    printBoard(level, chances);
                 }
 
                 if (board[row1-1][col1-1].equals(board[row2-1][col2-1])) {
@@ -54,14 +55,22 @@ public class Logic {
                 }
             } else {
                 stopwatch.stop();
-                if (chances > 0) System.out.println("\nCongratulations, you have won!");
-                else System.out.println("\nYou have lost, better luck next time!");
+                if (chances > 0) {
+                    saveScore = true;
+                    System.out.println("\nCongratulations, you have won!");
+                }
+                else {
+                    saveScore = false;
+                    System.out.println("\nYou have lost, better luck next time!");
+                }
                 System.out.println("Your attempt took you " + stopwatch.getMinutes() +
                         " minute(s) and " + stopwatch.seconds() + " second(s). " + chances + " chances remained.");
                 break;
             }
         }
+        String name = tools.saveScore(saveScore);
         ArrayList<String> list = new ArrayList<>();
+        list.add(name);
         list.add(String.valueOf(chances));
         list.add(String.valueOf(stopwatch.getMinutes()));
         list.add(String.valueOf(stopwatch.seconds()));
@@ -91,7 +100,10 @@ public class Logic {
     }
 
 //    PRINTS CURRENT BOARD STATE
-    private void printBoard(int level) {
+    private void printBoard(int level, int chances) {
+        if (level == 1) System.out.println("Difficulty: Easy.");
+        if (level == 2) System.out.println("Difficulty: Hard.");
+        System.out.println("Chances: " + chances + "\n");
         for (int i = 0; i < level*2; i++) {
             System.out.print("|");
             for (int j = 0; j < 4; j++) {

@@ -3,11 +3,13 @@ import java.util.Random;
 
 public class Game {
     private int chances;
+    private static final String HIGH_SCORES_PATH = "highscores.txt";
+    private static final String WORDS_PATH = "Words.txt";
     private String [][] cards = new String[4][4];
     private ArrayList<String> tempHighScores;
 
 //    MAIN METHOD
-    public Game(int difficultySelector, String playerName) {
+    public Game(int difficultySelector) {
 
         if (difficultySelector == 1) chances = 10;
         if (difficultySelector == 2) chances = 15;
@@ -16,14 +18,14 @@ public class Game {
         Logic logic = new Logic();
         DataOut dataOut = new DataOut();
 
-        tempHighScores = dataIn.readFile("highscores.txt");
+        tempHighScores = dataIn.readFile(HIGH_SCORES_PATH);
 
-        shuffleCards(dataIn.wordsPoolBuilder("Words.txt", difficultySelector), difficultySelector);
+        shuffleCards(dataIn.wordsPoolBuilder(WORDS_PATH, difficultySelector), difficultySelector);
         logic.setBoard(difficultySelector);
-        dataOut.saveFile(playerName, logic.cardComparison(cards, difficultySelector, chances), tempHighScores);
+        dataOut.saveFile(logic.cardComparison(cards, difficultySelector, chances), tempHighScores, HIGH_SCORES_PATH);
 
         System.out.println("\nHigh scores list:\n");
-        dataIn.filePrinter("highscores.txt");
+        dataIn.filePrinter(HIGH_SCORES_PATH);
         System.out.println("\nPress 1 to play again or 4 to quit.");
     }
 

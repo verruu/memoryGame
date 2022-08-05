@@ -26,9 +26,9 @@ public class Tools {
     }
 
 //    CREATE A FILE (IN THIS CASE THE BASE HIGSCORES.TXT FILE TO PREVENT READ/WRITE ERRORS)
-    public void createFile(String pathName) {
+    public void createFile(String fileName) {
         try {
-            File New_File = new File(pathName);
+            File New_File = new File(fileName);
             if (New_File.createNewFile()){
 //                System.out.println("The file is created successfully!");
             } else {
@@ -38,5 +38,18 @@ public class Tools {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+//    HIGH SCORE SAVE CHOICE
+    public String saveScore(boolean saveScore) {
+        if (saveScore) {
+            System.out.println("\nPress 1 to save your score or 2 to pass.");
+            if (checkUserInput(2) == 1) {
+                scanner.nextLine();
+                System.out.println("\nEnter player name: ");
+                return scanner.nextLine();
+            }
+        }
+        return null;
     }
 }
